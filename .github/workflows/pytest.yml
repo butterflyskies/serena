@@ -20,7 +20,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.11"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26  # v3
       - name: Free disk space
         if: runner.os == 'Linux'
         run: |
@@ -34,14 +34,14 @@ jobs:
           docker system prune -af || true
           df -h
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c  # v4
         with:
           python-version: "${{ matrix.python-version }}"
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff  # v5
         with:
           go-version: ">=1.17.0"
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
         with:
           node-version: '20.x'
       - name: Ensure cached directory exist before calling cache-related actions
@@ -55,7 +55,7 @@ jobs:
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Cache uv virtualenv
         id: cache-uv
-        uses: actions/cache@v3
+        uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c  # v3
         with:
           path: .venv
           key: uv-venv-${{ runner.os }}-${{ matrix.python-version }}-lock-${{ hashFiles('uv.lock') }}
@@ -79,7 +79,7 @@ jobs:
       # Writing to this file adds the directory to the PATH for subsequent steps
       - name: Cache Go binaries
         id: cache-go-binaries
-        uses: actions/cache@v3
+        uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c  # v3
         with:
           path: |
             ~/go/bin
@@ -91,7 +91,7 @@ jobs:
         run: go install golang.org/x/tools/gopls@latest
       - name: Set up Elixir
         if: runner.os != 'Windows'
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124  # v1
         with:
           elixir-version: "1.19.3"
           otp-version: "28"
@@ -110,7 +110,7 @@ jobs:
 #          # Ensure erlang_ls is in PATH
 #          echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@13.4
+        uses: DeLaGuardo/setup-clojure@3fe9b3ae632c6758d0b7757b0838606ef4287b08  # 13.4
         with:
           cli: latest
       - name: Install ccls (C/C++ Language Server)
@@ -132,19 +132,19 @@ jobs:
             exit 1
           fi
       - name: Setup Java (for JVM based languages)
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9  # v4
         with:
           distribution: 'temurin'
           java-version: '17'
       - name: Setup .NET SDK (for F# and C# languages)
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9  # v4
         with:
           dotnet-version: '10.0.x'
       - name: List .NET runtimes
         shell: bash
         run: dotnet --list-runtimes
       - name: Install Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd  # v3
         with:
           terraform_version: "1.5.0"
           terraform_wrapper: false
@@ -193,14 +193,14 @@ jobs:
           which sourcekit-lsp || echo "Warning: sourcekit-lsp not found in PATH"
           sourcekit-lsp --help || echo "Warning: sourcekit-lsp not responding"
       - name: Install Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b  # v1
         with:
           ruby-version: '3.4'
       - name: Install Ruby language server
         shell: bash
         run: gem install ruby-lsp
       - name: Install R
-        uses: r-lib/actions/setup-r@v2
+        uses: r-lib/actions/setup-r@d3c5be51b12e724e68f33216ca3c148b66d5f0b6  # v2
         with:
           r-version: '4.4.2'
           use-public-rspm: true
@@ -209,7 +209,7 @@ jobs:
         run: |
           Rscript -e "install.packages('languageserver', repos='https://cloud.r-project.org')"
       - name: Set up Julia
-        uses: julia-actions/setup-julia@v2
+        uses: julia-actions/setup-julia@4c0cb0fce8556fdb04a90347310e5db8b1f98fb9  # v2
         with:
           version: '1.10'
       - name: Install Julia LanguageServer
@@ -217,7 +217,7 @@ jobs:
         run: julia -e 'using Pkg; Pkg.add("LanguageServer")'
       - name: Setup Haskell toolchain
         if: runner.os != 'Windows'
-        uses: haskell/ghcup-setup@v1
+        uses: haskell/ghcup-setup@269e121e9e7528761aca5a606a53fe9d04cd6658  # v1
         with:
           ghc: '9.12.2'
           cabal: '3.10.3.0'
@@ -250,7 +250,7 @@ jobs:
           echo "Haskell test project built successfully"
         shell: bash
       - name: Install Zig
-        uses: goto-bus-stop/setup-zig@v2
+        uses: goto-bus-stop/setup-zig@abea47f85e598557f500fa1fd2ab7464fcb39406  # v2
         with:
           version: 0.14.1
       - name: Install ZLS (Zig Language Server)
@@ -371,7 +371,7 @@ jobs:
         run: npm install -g elm@0.19.1-6
       - name: Install Nix
         if: runner.os != 'Windows'  # Nix doesn't support Windows natively
-        uses: cachix/install-nix-action@v30
+        uses: cachix/install-nix-action@08dcb3a5e62fa31e2da3d490afc4176ef55ecd72  # v30
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Install nixd (Nix Language Server)
@@ -529,7 +529,7 @@ jobs:
           fi
       - name: Cache language servers
         id: cache-language-servers
-        uses: actions/cache@v3
+        uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c  # v3
         with:
           path: ~/.serena/language_servers/static
           key: language-servers-${{ runner.os }}-v1
